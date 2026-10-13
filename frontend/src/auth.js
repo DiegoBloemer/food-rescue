@@ -25,6 +25,7 @@ export const clearAuth = () => {
 export const saveAuth = (token, role) => {
   localStorage.setItem('access_token', token);
   localStorage.setItem('role', role);
+  window.dispatchEvent(new Event('auth-changed'));
 };
 
 // Check if token is expired

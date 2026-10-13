@@ -10,12 +10,19 @@ export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const updateRole = () => setRole(getRole());
+
   useEffect(() => {
-    setRole(getRole());
-    // Check initial theme
-    const html = document.querySelector("html");
-    const currentTheme = html?.getAttribute("data-theme") || "light";
-    setIsDark(currentTheme === "dark");
+    const html = document.querySelector('html');
+    const currentTheme = html?.getAttribute('data-theme') || 'light';
+    setIsDark(currentTheme === 'dark');
+
+    updateRole();
+    window.addEventListener('auth-changed', updateRole);
+
+    return () => {
+      window.removeEventListener('auth-changed', updateRole);
+    };
   }, []);
 
   const toggleTheme = () => {
