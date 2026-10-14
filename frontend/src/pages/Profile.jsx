@@ -10,7 +10,7 @@ export default function Profile() {
   const [formData, setFormData] = useState({
     name: '',
     city: '',
-    email: '',
+    contact_email: '',
     phone: '',
     address: ''
   });
@@ -39,8 +39,8 @@ export default function Profile() {
     setLoading(true);
     setMessage('');
     
-    if (!formData.name || !formData.city || !formData.email) {
-      setMessage('Name, City, and Email are required.');
+    if (!formData.name || !formData.city || !formData.contact_email) {
+      setMessage('Name, City, and Contact Email are required.');
       setMessageType('error');
       setLoading(false);
       return;
@@ -87,7 +87,7 @@ export default function Profile() {
     setFormData({
       name: '',
       city: '',
-      email: '',
+      contact_email: '',
       phone: '',
       address: ''
     });
@@ -179,7 +179,7 @@ export default function Profile() {
                   type="email"
                   className="input input-bordered bg-[#F9F3EF]/50 border-[#98A1BC] focus:border-[#555879] focus:ring-2 focus:ring-[#98A1BC]"
                   placeholder="contact@example.com"
-                  value={formData.email}
+                  value={formData.contact_email}
                   onChange={handleInputChange}
                   disabled={loading}
                 />
@@ -315,8 +315,8 @@ export default function Profile() {
               <FaEnvelope className="text-3xl" />
             </div>
             <div className="stat-title text-[#555879]">Contact Ready</div>
-            <div className={`stat-value text-lg ${formData.email || formData.phone ? 'text-green-600' : 'text-gray-600'}`}>
-              {formData.email || formData.phone ? 'Yes' : 'No'}
+            <div className={`stat-value text-lg ${formData.contact_email || formData.phone ? 'text-green-600' : 'text-gray-600'}`}>
+              {formData.contact_email || formData.phone ? 'Yes' : 'No'}
             </div>
           </div>
         </div>

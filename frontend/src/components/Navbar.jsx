@@ -10,12 +10,11 @@ export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const updateRole = () => setRole(getRole());
-
   useEffect(() => {
-    const html = document.querySelector('html');
-    const currentTheme = html?.getAttribute('data-theme') || 'light';
-    setIsDark(currentTheme === 'dark');
+    const updateRole = () => setRole(getRole());
+    const html = document.querySelector("html");
+    const currentTheme = html?.getAttribute("data-theme") || "light";
+    setIsDark(currentTheme === "dark");
 
     updateRole();
     window.addEventListener('auth-changed', updateRole);
