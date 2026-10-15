@@ -175,7 +175,7 @@ export default function Profile() {
                   </span>
                 </label>
                 <input
-                  name="email"
+                  name="contact_email" // <-- A CORREÇÃO É AQUI
                   type="email"
                   className="input input-bordered bg-[#F9F3EF]/50 border-[#98A1BC] focus:border-[#555879] focus:ring-2 focus:ring-[#98A1BC]"
                   placeholder="contact@example.com"
