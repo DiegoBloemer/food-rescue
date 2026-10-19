@@ -34,6 +34,17 @@ def create_listing(donor_id: int, payload: ListingCreate, session: Session = Dep
 def list_listings(session: Session = Depends(get_session)):
     return session.exec(select(Listing)).all()
 
+@router.get("/donor/{donor_id}", response_model=list[ListingRead])
+def list_donor_listings(donor_id: int, session: Session = Depends(get_session)):
+    donor = session.get(Donor, donor_id)
+    if not donor:
+        raise HTTPException(status_code=404, detail="Donor not found")
+    return session.exec(
+        select(Listing)
+        .where(Listing.donor_id == donor_id)
+        .order_by(Listing.id.desc())
+    ).all()
+
 @router.get("/search", response_model=list[ListingRead])
 def search_listings(city: str | None = Query(None), status: str | None = Query("OPEN"), session: Session = Depends(get_session)):
     stmt = select(Listing)

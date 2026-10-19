@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authFetch } from '../api';
 import { getRole, isAuthenticated } from '../auth';
-import { FaUser, FaSave, FaEdit, FaMapMarkerAlt, FaEnvelope, FaPhone, FaHome, FaUsers, FaHandHoldingHeart, FaLeaf } from 'react-icons/fa';
+import { FaUser, FaSave, FaEdit, FaMapMarkerAlt, FaEnvelope, FaPhone, FaHome, FaUsers, FaHandHoldingHeart, FaLeaf, FaBox } from 'react-icons/fa';
 
 export default function Profile() {
   const role = getRole();
@@ -19,6 +19,9 @@ export default function Profile() {
   const [existingId, setExistingId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [listings, setListings] = useState([]);
+  const [listingsLoading, setListingsLoading] = useState(false);
+  const [listingsError, setListingsError] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -34,6 +37,28 @@ export default function Profile() {
       setMessageType('info');
     }
   }, [role, navigate]);
+
+  useEffect(() => {
+    if (role !== 'donor' || !existingId) {
+      return;
+    }
+
+    const loadListings = async () => {
+      setListingsLoading(true);
+      setListingsError('');
+
+      try {
+        const data = await authFetch(`/listings/donor/${existingId}`);
+        setListings(Array.isArray(data) ? data : []);
+      } catch (error) {
+        setListingsError(error.message || 'Failed to load your listings.');
+      } finally {
+        setListingsLoading(false);
+      }
+    };
+
+    loadListings();
+  }, [role, existingId]);
 
   const createProfile = async () => {
     setLoading(true);
@@ -289,6 +314,56 @@ export default function Profile() {
             </div>
           </div>
         </div>
+
+        {role === 'donor' && existingId && (
+          <section className="mt-8 bg-white rounded-2xl shadow-lg border-2 border-[#98A1BC] p-6">
+            <h2 className="text-2xl font-bold text-[#555879] mb-4 flex items-center">
+              <FaBox className="mr-3" />
+              My Listings
+            </h2>
+
+            {listingsLoading && (
+              <p className="text-gray-600">Loading your listings...</p>
+            )}
+
+            {listingsError && (
+              <p className="text-red-600">{listingsError}</p>
+            )}
+
+            {!listingsLoading && !listingsError && listings.length === 0 && (
+              <p className="text-gray-600">
+                You have not created any listings yet.
+              </p>
+            )}
+
+            {!listingsLoading && !listingsError && listings.length > 0 && (
+              <div className="overflow-x-auto">
+                <table className="table w-full">
+                  <thead>
+                    <tr className="text-[#555879]">
+                      <th>Title</th>
+                      <th>Quantity</th>
+                      <th>City</th>
+                      <th>Status</th>
+                      <th>Expires at</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {listings.map((listing) => (
+                      <tr key={listing.id}>
+                        <td>{listing.title}</td>
+                        <td>{listing.quantity} {listing.unit}</td>
+                        <td>{listing.city}</td>
+                        <td>{listing.status}</td>
+                        <td>{new Date(listing.expires_at).toLocaleDateString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Stats Card */}
         <div className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-3">

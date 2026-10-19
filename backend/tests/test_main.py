@@ -101,6 +101,56 @@ def test_create_and_list_listings():
     assert any(r["city"] == "Pretoria" for r in results)
 
 
+def test_list_listings_by_donor():
+    first_donor_response = client.post("/donors", json={
+        "name": "History Donor",
+        "city": "Durban",
+        "contact_email": "history@example.com"
+    })
+    first_donor_id = first_donor_response.json()["id"]
+
+    second_donor_response = client.post("/donors", json={
+        "name": "Other Donor",
+        "city": "Durban",
+        "contact_email": "other@example.com"
+    })
+    second_donor_id = second_donor_response.json()["id"]
+
+    expires_at = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
+    first_listing_response = client.post(
+        f"/listings?donor_id={first_donor_id}",
+        json={
+            "title": "History Listing",
+            "description": "Created by the selected donor",
+            "quantity": 5,
+            "unit": "boxes",
+            "expires_at": expires_at,
+            "city": "Durban"
+        }
+    )
+    assert first_listing_response.status_code in [200, 201]
+
+    second_listing_response = client.post(
+        f"/listings?donor_id={second_donor_id}",
+        json={
+            "title": "Other Listing",
+            "description": "Created by another donor",
+            "quantity": 3,
+            "unit": "bags",
+            "expires_at": expires_at,
+            "city": "Durban"
+        }
+    )
+    assert second_listing_response.status_code in [200, 201]
+
+    response = client.get(f"/listings/donor/{first_donor_id}")
+
+    assert response.status_code == 200
+    listings = response.json()
+    assert [listing["title"] for listing in listings] == ["History Listing"]
+    assert all(listing["donor_id"] == first_donor_id for listing in listings)
+
+
 # ---------- CLAIMS TESTS ----------
 def test_create_claim():
     # Create donor
