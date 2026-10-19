@@ -40,7 +40,11 @@ export default function Profile() {
     setMessage('');
     
     if (!formData.name || !formData.city || !formData.contact_email) {
+<<<<<<< HEAD
       setMessage('Name, City, and Contact Email are required.');
+=======
+      setMessage('Name, City, and Email are required.');
+>>>>>>> 5785b4d0 (fix: profile creation, navbar buttons, and updating dependency files)
       setMessageType('error');
       setLoading(false);
       return;
@@ -175,7 +179,11 @@ export default function Profile() {
                   </span>
                 </label>
                 <input
+<<<<<<< HEAD
                   name="contact_email" // <-- A CORREÇÃO É AQUI
+=======
+                  name="contact_email"
+>>>>>>> 5785b4d0 (fix: profile creation, navbar buttons, and updating dependency files)
                   type="email"
                   className="input input-bordered bg-[#F9F3EF]/50 border-[#98A1BC] focus:border-[#555879] focus:ring-2 focus:ring-[#98A1BC]"
                   placeholder="contact@example.com"

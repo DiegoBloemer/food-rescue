@@ -11,6 +11,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+<<<<<<< HEAD
     const updateRole = () => setRole(getRole());
     const html = document.querySelector("html");
     const currentTheme = html?.getAttribute("data-theme") || "light";
@@ -22,6 +23,20 @@ export default function Navbar() {
     return () => {
       window.removeEventListener('auth-changed', updateRole);
     };
+=======
+  const updateRole = () => setRole(getRole());
+  // Check initial theme
+  const html = document.querySelector("html");
+  const currentTheme = html?.getAttribute("data-theme") || "light";
+  setIsDark(currentTheme === "dark");
+  
+  updateRole();
+  window.addEventListener('auth-changed', updateRole);
+
+  return () => {
+    window.removeEventListener('auth-changed', updateRole);
+  };
+>>>>>>> 5785b4d0 (fix: profile creation, navbar buttons, and updating dependency files)
   }, []);
 
   const toggleTheme = () => {

@@ -1,5 +1,5 @@
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlmodel import SQLModel, Field, Relationship
 
 class Donor(SQLModel, table=True):
@@ -35,6 +35,6 @@ class Claim(SQLModel, table=True):
     ngo_id: int = Field(foreign_key="ngo.id")
     status: str = Field(default="PENDING")  # PENDING, APPROVED, DENIED, PICKED_UP
     note: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     listing: Optional[Listing] = Relationship(back_populates="claims")
     ngo: Optional[NGO] = Relationship(back_populates="claims")
